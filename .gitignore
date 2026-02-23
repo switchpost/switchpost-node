@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Coverage
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Lock files (use npm for consistency)
+yarn.lock
+pnpm-lock.yaml
+
+# Gherkin feature files (fetched from switchpost-openapi)
+features/

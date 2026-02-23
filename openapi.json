@@ -1,0 +1,2746 @@
+{
+	"components": {
+		"schemas": {
+			"AuditInfo": {
+				"additionalProperties": false,
+				"properties": {
+					"created_at": {
+						"format": "date-time",
+						"type": "string"
+					},
+					"created_by": {
+						"type": "string"
+					},
+					"updated_at": {
+						"format": "date-time",
+						"type": "string"
+					},
+					"updated_by": {
+						"type": "string"
+					}
+				},
+				"required": ["created_at", "created_by", "updated_at", "updated_by"],
+				"type": "object"
+			},
+			"CreateBindingInputBody": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/CreateBindingInputBody.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"resource_id": {
+						"description": "Resource ID to scope the binding to.",
+						"type": "string"
+					},
+					"resource_type": {
+						"description": "Resource type: tenant or task.",
+						"type": "string"
+					},
+					"role": {
+						"description": "Role to grant.",
+						"type": "string"
+					}
+				},
+				"required": ["role", "resource_type", "resource_id"],
+				"type": "object"
+			},
+			"CreatePrincipalBody": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/CreatePrincipalBody.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"api_key": {
+						"type": "string"
+					},
+					"principal": {
+						"$ref": "#/components/schemas/Principal"
+					}
+				},
+				"required": ["principal"],
+				"type": "object"
+			},
+			"CreatePrincipalInputBody": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/CreatePrincipalInputBody.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"email": {
+						"description": "User email (user type only).",
+						"type": "string"
+					},
+					"expires_at": {
+						"description": "Optional expiration time (API key only).",
+						"format": "date-time",
+						"type": "string"
+					},
+					"name": {
+						"description": "Human-readable principal name.",
+						"type": "string"
+					},
+					"oauth_provider": {
+						"description": "OAuth provider (user type only).",
+						"type": "string"
+					},
+					"oauth_subject": {
+						"description": "OAuth subject ID (user type only).",
+						"type": "string"
+					},
+					"type": {
+						"description": "Principal type: api_key or user.",
+						"type": "string"
+					}
+				},
+				"required": ["type", "name"],
+				"type": "object"
+			},
+			"CreateTaskInputBody": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/CreateTaskInputBody.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"endpoint_url": {
+						"description": "HTTPS endpoint URL to call, max 2048 chars.",
+						"type": "string"
+					},
+					"max_concurrency": {
+						"description": "Maximum concurrent runs (1-10000).",
+						"format": "int64",
+						"type": "integer"
+					},
+					"name": {
+						"description": "Task slug, unique per tenant. [a-z0-9\\-_], max 100 chars.",
+						"type": "string"
+					},
+					"permanent_failure_codes": {
+						"description": "HTTP status codes that should not be retried (0-20 elements).",
+						"items": {
+							"format": "int64",
+							"type": "integer"
+						},
+						"type": ["array", "null"]
+					},
+					"rate_limit": {
+						"$ref": "#/components/schemas/RateLimit",
+						"description": "Throughput constraint."
+					},
+					"result_ttl_seconds": {
+						"description": "Duration before stored results expire (60-31536000).",
+						"format": "int64",
+						"type": "integer"
+					},
+					"retry_policy": {
+						"$ref": "#/components/schemas/RetryPolicy",
+						"description": "Exponential backoff configuration."
+					},
+					"store_response": {
+						"description": "Whether to persist response bodies. Default: true.",
+						"type": "boolean"
+					},
+					"success_codes": {
+						"description": "HTTP status codes indicating success (1-20 elements).",
+						"items": {
+							"format": "int64",
+							"type": "integer"
+						},
+						"type": ["array", "null"]
+					},
+					"timeout_ms": {
+						"description": "Per-attempt timeout in ms (1-30000000). Default: 30000.",
+						"format": "int64",
+						"type": "integer"
+					}
+				},
+				"required": ["name", "endpoint_url"],
+				"type": "object"
+			},
+			"CreateTenantBody": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/CreateTenantBody.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"api_key": {
+						"type": "string"
+					},
+					"principal_id": {
+						"type": "string"
+					},
+					"tenant": {
+						"$ref": "#/components/schemas/Tenant"
+					}
+				},
+				"required": ["tenant", "api_key", "principal_id"],
+				"type": "object"
+			},
+			"CreateTenantInputBody": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/CreateTenantInputBody.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"display_name": {
+						"description": "Human-readable tenant label, max 200 chars.",
+						"type": "string"
+					},
+					"name": {
+						"description": "Tenant slug, globally unique. [a-z0-9\\-_], max 100 chars.",
+						"type": "string"
+					}
+				},
+				"required": ["name", "display_name"],
+				"type": "object"
+			},
+			"CreateTriggerInputBody": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/CreateTriggerInputBody.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"default_payload": {
+						"description": "Optional default JSON payload."
+					},
+					"enabled": {
+						"description": "Whether the trigger is active. Default: true.",
+						"type": "boolean"
+					},
+					"forward_result": {
+						"description": "Forward source result as payload for EVENT type.",
+						"type": "boolean"
+					},
+					"name": {
+						"description": "Human-readable trigger label.",
+						"type": "string"
+					},
+					"on_status": {
+						"description": "Terminal status filter for EVENT type.",
+						"type": "string"
+					},
+					"schedule": {
+						"description": "Cron expression (required for CRON type).",
+						"type": "string"
+					},
+					"source_task_id": {
+						"description": "Source task ID (required for EVENT type).",
+						"type": "string"
+					},
+					"timezone": {
+						"description": "IANA timezone for CRON schedule.",
+						"type": "string"
+					},
+					"type": {
+						"description": "Trigger mechanism: HTTP, CRON, EVENT, or QUEUE.",
+						"type": "string"
+					}
+				},
+				"required": ["name", "type"],
+				"type": "object"
+			},
+			"CreateWebhookInputBody": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/CreateWebhookInputBody.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"secret": {
+						"description": "Optional HMAC secret for webhook payload signing.",
+						"type": "string"
+					},
+					"url": {
+						"description": "HTTPS endpoint URL for webhook delivery, max 2048 chars.",
+						"type": "string"
+					}
+				},
+				"required": ["url"],
+				"type": "object"
+			},
+			"CreatedInfo": {
+				"additionalProperties": false,
+				"properties": {
+					"created_at": {
+						"format": "date-time",
+						"type": "string"
+					},
+					"created_by": {
+						"type": "string"
+					}
+				},
+				"required": ["created_at", "created_by"],
+				"type": "object"
+			},
+			"CursorListResponseTaskRun": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/CursorListResponseTaskRun.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"has_more": {
+						"type": "boolean"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/TaskRun"
+						},
+						"type": ["array", "null"]
+					},
+					"next_cursor": {
+						"type": "string"
+					},
+					"prev_cursor": {
+						"type": "string"
+					}
+				},
+				"required": ["items", "has_more"],
+				"type": "object"
+			},
+			"CursorListResponseTaskRunAttempt": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/CursorListResponseTaskRunAttempt.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"has_more": {
+						"type": "boolean"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/TaskRunAttempt"
+						},
+						"type": ["array", "null"]
+					},
+					"next_cursor": {
+						"type": "string"
+					},
+					"prev_cursor": {
+						"type": "string"
+					}
+				},
+				"required": ["items", "has_more"],
+				"type": "object"
+			},
+			"ErrorDetail": {
+				"additionalProperties": false,
+				"properties": {
+					"location": {
+						"description": "Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'",
+						"type": "string"
+					},
+					"message": {
+						"description": "Error message text",
+						"type": "string"
+					},
+					"value": {
+						"description": "The value at the given location"
+					}
+				},
+				"type": "object"
+			},
+			"ErrorModel": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/ErrorModel.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"detail": {
+						"description": "A human-readable explanation specific to this occurrence of the problem.",
+						"examples": ["Property foo is required but is missing."],
+						"type": "string"
+					},
+					"errors": {
+						"description": "Optional list of individual error details",
+						"items": {
+							"$ref": "#/components/schemas/ErrorDetail"
+						},
+						"type": ["array", "null"]
+					},
+					"instance": {
+						"description": "A URI reference that identifies the specific occurrence of the problem.",
+						"examples": ["https://example.com/error-log/abc123"],
+						"format": "uri",
+						"type": "string"
+					},
+					"status": {
+						"description": "HTTP status code",
+						"examples": [400],
+						"format": "int64",
+						"type": "integer"
+					},
+					"title": {
+						"description": "A short, human-readable summary of the problem type. This value should not change between occurrences of the error.",
+						"examples": ["Bad Request"],
+						"type": "string"
+					},
+					"type": {
+						"default": "about:blank",
+						"description": "A URI reference to human-readable documentation for the error.",
+						"examples": ["https://example.com/errors/example"],
+						"format": "uri",
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"ListBindingsOutputBody": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/ListBindingsOutputBody.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/PolicyBinding"
+						},
+						"type": ["array", "null"]
+					}
+				},
+				"required": ["items"],
+				"type": "object"
+			},
+			"ListTriggersOutputBody": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/ListTriggersOutputBody.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/Trigger"
+						},
+						"type": ["array", "null"]
+					}
+				},
+				"required": ["items"],
+				"type": "object"
+			},
+			"ListWebhooksOutputBody": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/ListWebhooksOutputBody.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/Webhook"
+						},
+						"type": ["array", "null"]
+					}
+				},
+				"required": ["items"],
+				"type": "object"
+			},
+			"OffsetListResponsePrincipal": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/OffsetListResponsePrincipal.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/Principal"
+						},
+						"type": ["array", "null"]
+					},
+					"limit": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"offset": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"total": {
+						"format": "int64",
+						"type": "integer"
+					}
+				},
+				"required": ["items", "total", "offset", "limit"],
+				"type": "object"
+			},
+			"OffsetListResponseTask": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/OffsetListResponseTask.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/Task"
+						},
+						"type": ["array", "null"]
+					},
+					"limit": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"offset": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"total": {
+						"format": "int64",
+						"type": "integer"
+					}
+				},
+				"required": ["items", "total", "offset", "limit"],
+				"type": "object"
+			},
+			"PolicyBinding": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/PolicyBinding.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"created": {
+						"$ref": "#/components/schemas/CreatedInfo"
+					},
+					"id": {
+						"type": "string"
+					},
+					"principal_id": {
+						"type": "string"
+					},
+					"resource_id": {
+						"type": "string"
+					},
+					"resource_type": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string"
+					},
+					"tenant_id": {
+						"type": "string"
+					}
+				},
+				"required": ["id", "tenant_id", "principal_id", "role", "resource_type", "resource_id", "created"],
+				"type": "object"
+			},
+			"Principal": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/Principal.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"audit": {
+						"$ref": "#/components/schemas/AuditInfo"
+					},
+					"email": {
+						"type": "string"
+					},
+					"expires_at": {
+						"format": "date-time",
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					},
+					"key_prefix": {
+						"type": "string"
+					},
+					"last_seen_at": {
+						"format": "date-time",
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"oauth_provider": {
+						"type": "string"
+					},
+					"oauth_subject": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					}
+				},
+				"required": ["id", "type", "name", "audit"],
+				"type": "object"
+			},
+			"RateLimit": {
+				"additionalProperties": false,
+				"properties": {
+					"max_per_second": {
+						"format": "int64",
+						"type": "integer"
+					}
+				},
+				"required": ["max_per_second"],
+				"type": "object"
+			},
+			"RetryPolicy": {
+				"additionalProperties": false,
+				"properties": {
+					"initial_delay_ms": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"max_attempts": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"max_delay_ms": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"multiplier": {
+						"format": "double",
+						"type": "number"
+					}
+				},
+				"required": ["max_attempts", "initial_delay_ms", "multiplier", "max_delay_ms"],
+				"type": "object"
+			},
+			"SubmitRunInputBody": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/SubmitRunInputBody.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"payload": {
+						"description": "JSON payload for the run. Max 1MB."
+					},
+					"webhook_url": {
+						"description": "Optional webhook URL to notify on completion.",
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"SystemSettings": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/SystemSettings.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"default_worker_concurrency": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"max_concurrent_runs_per_tenant": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"max_tasks_per_tenant": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"run_archival_after_days": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"run_archival_batch_size": {
+						"format": "int64",
+						"type": "integer"
+					}
+				},
+				"required": [
+					"max_tasks_per_tenant",
+					"max_concurrent_runs_per_tenant",
+					"default_worker_concurrency",
+					"run_archival_batch_size"
+				],
+				"type": "object"
+			},
+			"Task": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/Task.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"audit": {
+						"$ref": "#/components/schemas/AuditInfo"
+					},
+					"endpoint_url": {
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					},
+					"max_concurrency": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"name": {
+						"type": "string"
+					},
+					"permanent_failure_codes": {
+						"items": {
+							"format": "int64",
+							"type": "integer"
+						},
+						"type": ["array", "null"]
+					},
+					"rate_limit": {
+						"$ref": "#/components/schemas/RateLimit"
+					},
+					"result_ttl_seconds": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"retry_policy": {
+						"$ref": "#/components/schemas/RetryPolicy"
+					},
+					"store_response": {
+						"type": "boolean"
+					},
+					"success_codes": {
+						"items": {
+							"format": "int64",
+							"type": "integer"
+						},
+						"type": ["array", "null"]
+					},
+					"timeout_ms": {
+						"format": "int64",
+						"type": "integer"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"endpoint_url",
+					"timeout_ms",
+					"retry_policy",
+					"success_codes",
+					"permanent_failure_codes",
+					"store_response",
+					"audit"
+				],
+				"type": "object"
+			},
+			"TaskResultMeta": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/TaskResultMeta.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"attempt_id": {
+						"type": "string"
+					},
+					"blob_url": {
+						"type": "string"
+					},
+					"content_length": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"content_type": {
+						"type": "string"
+					},
+					"expires_at": {
+						"format": "date-time",
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					},
+					"response_headers": {},
+					"run_id": {
+						"type": "string"
+					},
+					"status_code": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"stored_at": {
+						"format": "date-time",
+						"type": "string"
+					}
+				},
+				"required": ["id", "attempt_id", "run_id", "status_code", "blob_url", "stored_at"],
+				"type": "object"
+			},
+			"TaskRun": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/TaskRun.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"cancelled_at": {
+						"format": "date-time",
+						"type": "string"
+					},
+					"cancelled_by": {
+						"type": "string"
+					},
+					"completed_at": {
+						"format": "date-time",
+						"type": "string"
+					},
+					"created": {
+						"$ref": "#/components/schemas/CreatedInfo"
+					},
+					"endpoint_url": {
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					},
+					"max_attempts": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"max_concurrency": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"payload": {},
+					"priority": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"rate_limit_max_per_second": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"started_at": {
+						"format": "date-time",
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					},
+					"task_id": {
+						"type": "string"
+					},
+					"trigger_id": {
+						"type": "string"
+					}
+				},
+				"required": ["id", "task_id", "trigger_id", "status", "max_attempts", "endpoint_url", "priority", "created"],
+				"type": "object"
+			},
+			"TaskRunAttempt": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/TaskRunAttempt.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"attempt_number": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"completed_at": {
+						"format": "date-time",
+						"type": "string"
+					},
+					"created_at": {
+						"format": "date-time",
+						"type": "string"
+					},
+					"created_by": {
+						"type": "string"
+					},
+					"error_message": {
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					},
+					"request_headers": {},
+					"response_headers": {},
+					"response_status_code": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"run_id": {
+						"type": "string"
+					},
+					"scheduled_at": {
+						"format": "date-time",
+						"type": "string"
+					},
+					"started_at": {
+						"format": "date-time",
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					}
+				},
+				"required": ["id", "run_id", "attempt_number", "status", "scheduled_at", "created_at", "created_by"],
+				"type": "object"
+			},
+			"Tenant": {
+				"additionalProperties": false,
+				"properties": {
+					"audit": {
+						"$ref": "#/components/schemas/AuditInfo"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": ["id", "name", "display_name", "audit"],
+				"type": "object"
+			},
+			"TenantSettings": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/TenantSettings.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"api_rate_limit_burst_size": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"api_rate_limit_per_minute": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"default_initial_delay_ms": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"default_max_attempts": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"default_priority": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"default_result_ttl_seconds": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"max_batch_size": {
+						"format": "int64",
+						"type": "integer"
+					},
+					"oauth_auto_provisioning": {
+						"type": "boolean"
+					},
+					"webhook_allowed_domains": {
+						"items": {
+							"type": "string"
+						},
+						"type": ["array", "null"]
+					}
+				},
+				"required": [
+					"default_max_attempts",
+					"default_initial_delay_ms",
+					"webhook_allowed_domains",
+					"oauth_auto_provisioning",
+					"api_rate_limit_per_minute",
+					"api_rate_limit_burst_size",
+					"max_batch_size",
+					"default_priority"
+				],
+				"type": "object"
+			},
+			"Trigger": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/Trigger.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"audit": {
+						"$ref": "#/components/schemas/AuditInfo"
+					},
+					"default_payload": {},
+					"enabled": {
+						"type": "boolean"
+					},
+					"forward_result": {
+						"type": "boolean"
+					},
+					"id": {
+						"type": "string"
+					},
+					"last_fired_at": {
+						"format": "date-time",
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"next_fire_at": {
+						"format": "date-time",
+						"type": "string"
+					},
+					"on_status": {
+						"type": "string"
+					},
+					"payload_mapping": {
+						"type": "string"
+					},
+					"queue_adapter_config": {},
+					"queue_adapter_type": {
+						"type": "string"
+					},
+					"schedule": {
+						"type": "string"
+					},
+					"source_task_id": {
+						"type": "string"
+					},
+					"task_id": {
+						"type": "string"
+					},
+					"timezone": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					}
+				},
+				"required": ["id", "task_id", "type", "name", "enabled", "audit"],
+				"type": "object"
+			},
+			"UpdateTaskInputBody": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/UpdateTaskInputBody.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"endpoint_url": {
+						"description": "Updated HTTPS endpoint URL.",
+						"type": "string"
+					},
+					"max_concurrency": {
+						"description": "Updated concurrency limit.",
+						"format": "int64",
+						"type": "integer"
+					},
+					"permanent_failure_codes": {
+						"description": "Updated permanent failure codes.",
+						"items": {
+							"format": "int64",
+							"type": "integer"
+						},
+						"type": "array"
+					},
+					"rate_limit": {
+						"$ref": "#/components/schemas/RateLimit",
+						"description": "Updated rate limit configuration."
+					},
+					"result_ttl_seconds": {
+						"description": "Updated result TTL in seconds.",
+						"format": "int64",
+						"type": "integer"
+					},
+					"retry_policy": {
+						"$ref": "#/components/schemas/RetryPolicy",
+						"description": "Updated retry configuration."
+					},
+					"store_response": {
+						"description": "Updated response storage flag.",
+						"type": "boolean"
+					},
+					"success_codes": {
+						"description": "Updated success status codes.",
+						"items": {
+							"format": "int64",
+							"type": "integer"
+						},
+						"type": "array"
+					},
+					"timeout_ms": {
+						"description": "Updated per-attempt timeout in ms.",
+						"format": "int64",
+						"type": "integer"
+					}
+				},
+				"type": "object"
+			},
+			"UpdateTriggerInputBody": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/UpdateTriggerInputBody.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"default_payload": {
+						"description": "Updated default payload."
+					},
+					"enabled": {
+						"description": "Updated active flag.",
+						"type": "boolean"
+					},
+					"forward_result": {
+						"description": "Updated result forwarding flag.",
+						"type": "boolean"
+					},
+					"name": {
+						"description": "Updated trigger label.",
+						"type": "string"
+					},
+					"on_status": {
+						"description": "Updated terminal status filter.",
+						"type": "string"
+					},
+					"schedule": {
+						"description": "Updated cron expression.",
+						"type": "string"
+					},
+					"source_task_id": {
+						"description": "Updated source task ID.",
+						"type": "string"
+					},
+					"timezone": {
+						"description": "Updated IANA timezone.",
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"Webhook": {
+				"additionalProperties": false,
+				"properties": {
+					"$schema": {
+						"description": "A URL to the JSON Schema for this object.",
+						"examples": ["https://example.com/schemas/Webhook.json"],
+						"format": "uri",
+						"readOnly": true,
+						"type": "string"
+					},
+					"created": {
+						"$ref": "#/components/schemas/CreatedInfo"
+					},
+					"id": {
+						"type": "string"
+					},
+					"run_id": {
+						"type": "string"
+					},
+					"secret_ref": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					}
+				},
+				"required": ["id", "run_id", "url", "created"],
+				"type": "object"
+			}
+		},
+		"securitySchemes": {
+			"apiKeyAuth": {
+				"description": "API key for machine-to-machine authentication.",
+				"in": "header",
+				"name": "X-API-Key",
+				"type": "apiKey"
+			},
+			"bearerAuth": {
+				"bearerFormat": "JWT",
+				"description": "JWT access token obtained via OAuth exchange or token refresh.",
+				"scheme": "bearer",
+				"type": "http"
+			}
+		}
+	},
+	"info": {
+		"description": "API for the SwitchPost task scheduling platform.",
+		"license": {
+			"name": "Apache 2.0",
+			"url": "https://www.apache.org/licenses/LICENSE-2.0"
+		},
+		"title": "SwitchPost API",
+		"version": "0.0.0"
+	},
+	"openapi": "3.1.0",
+	"paths": {
+		"/admin/settings": {
+			"get": {
+				"operationId": "get-system-settings",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SystemSettings"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Get system settings (admin only)",
+				"tags": ["Admin"]
+			},
+			"put": {
+				"operationId": "update-system-settings",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SystemSettings"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SystemSettings"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Update system settings (admin only)",
+				"tags": ["Admin"]
+			}
+		},
+		"/admin/tenants": {
+			"post": {
+				"operationId": "create-tenant",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateTenantInputBody"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CreateTenantBody"
+								}
+							}
+						},
+						"description": "Created"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Create a new tenant (admin only)",
+				"tags": ["Admin"]
+			}
+		},
+		"/bindings/{bindingId}": {
+			"delete": {
+				"operationId": "delete-binding",
+				"parameters": [
+					{
+						"description": "Binding ID.",
+						"in": "path",
+						"name": "bindingId",
+						"required": true,
+						"schema": {
+							"description": "Binding ID.",
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "No Content"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Delete a policy binding",
+				"tags": ["Principals"]
+			}
+		},
+		"/principals": {
+			"get": {
+				"operationId": "list-principals",
+				"parameters": [
+					{
+						"description": "Maximum number of items to return.",
+						"explode": false,
+						"in": "query",
+						"name": "limit",
+						"schema": {
+							"default": 50,
+							"description": "Maximum number of items to return.",
+							"format": "int64",
+							"maximum": 200,
+							"minimum": 1,
+							"type": "integer"
+						}
+					},
+					{
+						"description": "Number of items to skip.",
+						"explode": false,
+						"in": "query",
+						"name": "offset",
+						"schema": {
+							"default": 0,
+							"description": "Number of items to skip.",
+							"format": "int64",
+							"minimum": 0,
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OffsetListResponsePrincipal"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "List principals for the tenant",
+				"tags": ["Principals"]
+			},
+			"post": {
+				"operationId": "create-principal",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreatePrincipalInputBody"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CreatePrincipalBody"
+								}
+							}
+						},
+						"description": "Created"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Create a new principal",
+				"tags": ["Principals"]
+			}
+		},
+		"/principals/{principalId}": {
+			"delete": {
+				"operationId": "delete-principal",
+				"parameters": [
+					{
+						"description": "Principal ID.",
+						"in": "path",
+						"name": "principalId",
+						"required": true,
+						"schema": {
+							"description": "Principal ID.",
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "No Content"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Delete a principal",
+				"tags": ["Principals"]
+			},
+			"get": {
+				"operationId": "get-principal",
+				"parameters": [
+					{
+						"description": "Principal ID.",
+						"in": "path",
+						"name": "principalId",
+						"required": true,
+						"schema": {
+							"description": "Principal ID.",
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Principal"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Get a principal by ID",
+				"tags": ["Principals"]
+			}
+		},
+		"/principals/{principalId}/bindings": {
+			"get": {
+				"operationId": "list-bindings",
+				"parameters": [
+					{
+						"description": "Principal ID.",
+						"in": "path",
+						"name": "principalId",
+						"required": true,
+						"schema": {
+							"description": "Principal ID.",
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ListBindingsOutputBody"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "List policy bindings for a principal",
+				"tags": ["Principals"]
+			},
+			"post": {
+				"operationId": "create-binding",
+				"parameters": [
+					{
+						"description": "Principal ID.",
+						"in": "path",
+						"name": "principalId",
+						"required": true,
+						"schema": {
+							"description": "Principal ID.",
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateBindingInputBody"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PolicyBinding"
+								}
+							}
+						},
+						"description": "Created"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Create a policy binding for a principal",
+				"tags": ["Principals"]
+			}
+		},
+		"/runs/{runId}": {
+			"get": {
+				"operationId": "get-run",
+				"parameters": [
+					{
+						"description": "Run ID.",
+						"in": "path",
+						"name": "runId",
+						"required": true,
+						"schema": {
+							"description": "Run ID.",
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TaskRun"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Get a run by ID",
+				"tags": ["Runs"]
+			}
+		},
+		"/runs/{runId}/attempts": {
+			"get": {
+				"operationId": "list-attempts",
+				"parameters": [
+					{
+						"description": "Parent run ID.",
+						"in": "path",
+						"name": "runId",
+						"required": true,
+						"schema": {
+							"description": "Parent run ID.",
+							"type": "string"
+						}
+					},
+					{
+						"description": "Maximum number of items to return.",
+						"explode": false,
+						"in": "query",
+						"name": "limit",
+						"schema": {
+							"default": 50,
+							"description": "Maximum number of items to return.",
+							"format": "int64",
+							"maximum": 200,
+							"minimum": 1,
+							"type": "integer"
+						}
+					},
+					{
+						"description": "Opaque cursor for the next page.",
+						"explode": false,
+						"in": "query",
+						"name": "after",
+						"schema": {
+							"description": "Opaque cursor for the next page.",
+							"type": "string"
+						}
+					},
+					{
+						"description": "Opaque cursor for the previous page.",
+						"explode": false,
+						"in": "query",
+						"name": "before",
+						"schema": {
+							"description": "Opaque cursor for the previous page.",
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CursorListResponseTaskRunAttempt"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "List attempts for a run",
+				"tags": ["Attempts"]
+			}
+		},
+		"/runs/{runId}/attempts/{attemptId}": {
+			"get": {
+				"operationId": "get-attempt",
+				"parameters": [
+					{
+						"description": "Parent run ID.",
+						"in": "path",
+						"name": "runId",
+						"required": true,
+						"schema": {
+							"description": "Parent run ID.",
+							"type": "string"
+						}
+					},
+					{
+						"description": "Attempt ID.",
+						"in": "path",
+						"name": "attemptId",
+						"required": true,
+						"schema": {
+							"description": "Attempt ID.",
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TaskRunAttempt"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Get an attempt by ID",
+				"tags": ["Attempts"]
+			}
+		},
+		"/runs/{runId}/cancel": {
+			"post": {
+				"operationId": "cancel-run",
+				"parameters": [
+					{
+						"description": "Run ID.",
+						"in": "path",
+						"name": "runId",
+						"required": true,
+						"schema": {
+							"description": "Run ID.",
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TaskRun"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Cancel a running task run",
+				"tags": ["Runs"]
+			}
+		},
+		"/runs/{runId}/result": {
+			"get": {
+				"operationId": "get-result",
+				"parameters": [
+					{
+						"description": "Run ID.",
+						"in": "path",
+						"name": "runId",
+						"required": true,
+						"schema": {
+							"description": "Run ID.",
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TaskResultMeta"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Get result metadata for a completed run",
+				"tags": ["Results"]
+			}
+		},
+		"/runs/{runId}/retry": {
+			"post": {
+				"operationId": "retry-run",
+				"parameters": [
+					{
+						"description": "Run ID.",
+						"in": "path",
+						"name": "runId",
+						"required": true,
+						"schema": {
+							"description": "Run ID.",
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"202": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TaskRun"
+								}
+							}
+						},
+						"description": "Accepted"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Retry a failed run",
+				"tags": ["Runs"]
+			}
+		},
+		"/runs/{runId}/webhooks": {
+			"get": {
+				"operationId": "list-webhooks",
+				"parameters": [
+					{
+						"description": "Run ID.",
+						"in": "path",
+						"name": "runId",
+						"required": true,
+						"schema": {
+							"description": "Run ID.",
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ListWebhooksOutputBody"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "List webhooks for a run",
+				"tags": ["Webhooks"]
+			},
+			"post": {
+				"operationId": "create-webhook",
+				"parameters": [
+					{
+						"description": "Run ID.",
+						"in": "path",
+						"name": "runId",
+						"required": true,
+						"schema": {
+							"description": "Run ID.",
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateWebhookInputBody"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Webhook"
+								}
+							}
+						},
+						"description": "Created"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Register a webhook for a run",
+				"tags": ["Webhooks"]
+			}
+		},
+		"/runs/{runId}/webhooks/{webhookId}": {
+			"delete": {
+				"operationId": "delete-webhook",
+				"parameters": [
+					{
+						"description": "Run ID.",
+						"in": "path",
+						"name": "runId",
+						"required": true,
+						"schema": {
+							"description": "Run ID.",
+							"type": "string"
+						}
+					},
+					{
+						"description": "Webhook ID.",
+						"in": "path",
+						"name": "webhookId",
+						"required": true,
+						"schema": {
+							"description": "Webhook ID.",
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "No Content"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Delete a webhook",
+				"tags": ["Webhooks"]
+			}
+		},
+		"/settings": {
+			"get": {
+				"operationId": "get-tenant-settings",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TenantSettings"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Get tenant settings",
+				"tags": ["Settings"]
+			},
+			"put": {
+				"operationId": "update-tenant-settings",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TenantSettings"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TenantSettings"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Update tenant settings",
+				"tags": ["Settings"]
+			}
+		},
+		"/tasks": {
+			"get": {
+				"operationId": "list-tasks",
+				"parameters": [
+					{
+						"description": "Maximum number of items to return.",
+						"explode": false,
+						"in": "query",
+						"name": "limit",
+						"schema": {
+							"default": 50,
+							"description": "Maximum number of items to return.",
+							"format": "int64",
+							"maximum": 200,
+							"minimum": 1,
+							"type": "integer"
+						}
+					},
+					{
+						"description": "Number of items to skip.",
+						"explode": false,
+						"in": "query",
+						"name": "offset",
+						"schema": {
+							"default": 0,
+							"description": "Number of items to skip.",
+							"format": "int64",
+							"minimum": 0,
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OffsetListResponseTask"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "List tasks for the tenant",
+				"tags": ["Tasks"]
+			},
+			"post": {
+				"operationId": "create-task",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateTaskInputBody"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Task"
+								}
+							}
+						},
+						"description": "Created"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Create a new task",
+				"tags": ["Tasks"]
+			}
+		},
+		"/tasks/{taskId}": {
+			"delete": {
+				"operationId": "delete-task",
+				"parameters": [
+					{
+						"description": "Task ID.",
+						"in": "path",
+						"name": "taskId",
+						"required": true,
+						"schema": {
+							"description": "Task ID.",
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "No Content"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Delete a task",
+				"tags": ["Tasks"]
+			},
+			"get": {
+				"operationId": "get-task",
+				"parameters": [
+					{
+						"description": "Task ID.",
+						"in": "path",
+						"name": "taskId",
+						"required": true,
+						"schema": {
+							"description": "Task ID.",
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Task"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Get a task by ID",
+				"tags": ["Tasks"]
+			},
+			"patch": {
+				"operationId": "update-task",
+				"parameters": [
+					{
+						"description": "Task ID.",
+						"in": "path",
+						"name": "taskId",
+						"required": true,
+						"schema": {
+							"description": "Task ID.",
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateTaskInputBody"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Task"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Partially update a task",
+				"tags": ["Tasks"]
+			}
+		},
+		"/tasks/{taskId}/runs": {
+			"get": {
+				"operationId": "list-runs",
+				"parameters": [
+					{
+						"description": "Task ID.",
+						"in": "path",
+						"name": "taskId",
+						"required": true,
+						"schema": {
+							"description": "Task ID.",
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by run status (PENDING, RUNNING, COMPLETED, FAILED, CANCELLED).",
+						"explode": false,
+						"in": "query",
+						"name": "status",
+						"schema": {
+							"description": "Filter by run status (PENDING, RUNNING, COMPLETED, FAILED, CANCELLED).",
+							"type": "string"
+						}
+					},
+					{
+						"description": "Maximum number of items to return.",
+						"explode": false,
+						"in": "query",
+						"name": "limit",
+						"schema": {
+							"default": 50,
+							"description": "Maximum number of items to return.",
+							"format": "int64",
+							"maximum": 200,
+							"minimum": 1,
+							"type": "integer"
+						}
+					},
+					{
+						"description": "Opaque cursor for the next page.",
+						"explode": false,
+						"in": "query",
+						"name": "after",
+						"schema": {
+							"description": "Opaque cursor for the next page.",
+							"type": "string"
+						}
+					},
+					{
+						"description": "Opaque cursor for the previous page.",
+						"explode": false,
+						"in": "query",
+						"name": "before",
+						"schema": {
+							"description": "Opaque cursor for the previous page.",
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CursorListResponseTaskRun"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "List runs for a task",
+				"tags": ["Runs"]
+			},
+			"post": {
+				"operationId": "submit-run",
+				"parameters": [
+					{
+						"description": "Task ID.",
+						"in": "path",
+						"name": "taskId",
+						"required": true,
+						"schema": {
+							"description": "Task ID.",
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SubmitRunInputBody"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"202": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TaskRun"
+								}
+							}
+						},
+						"description": "Accepted"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Submit a new task run",
+				"tags": ["Runs"]
+			}
+		},
+		"/tasks/{taskId}/triggers": {
+			"get": {
+				"operationId": "list-triggers",
+				"parameters": [
+					{
+						"description": "Parent task ID.",
+						"in": "path",
+						"name": "taskId",
+						"required": true,
+						"schema": {
+							"description": "Parent task ID.",
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ListTriggersOutputBody"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "List triggers for a task",
+				"tags": ["Triggers"]
+			},
+			"post": {
+				"operationId": "create-trigger",
+				"parameters": [
+					{
+						"description": "Parent task ID.",
+						"in": "path",
+						"name": "taskId",
+						"required": true,
+						"schema": {
+							"description": "Parent task ID.",
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateTriggerInputBody"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Trigger"
+								}
+							}
+						},
+						"description": "Created"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Create a new trigger for a task",
+				"tags": ["Triggers"]
+			}
+		},
+		"/tasks/{taskId}/triggers/{triggerId}": {
+			"delete": {
+				"operationId": "delete-trigger",
+				"parameters": [
+					{
+						"description": "Parent task ID.",
+						"in": "path",
+						"name": "taskId",
+						"required": true,
+						"schema": {
+							"description": "Parent task ID.",
+							"type": "string"
+						}
+					},
+					{
+						"description": "Trigger ID.",
+						"in": "path",
+						"name": "triggerId",
+						"required": true,
+						"schema": {
+							"description": "Trigger ID.",
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "No Content"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Delete a trigger",
+				"tags": ["Triggers"]
+			},
+			"get": {
+				"operationId": "get-trigger",
+				"parameters": [
+					{
+						"description": "Parent task ID.",
+						"in": "path",
+						"name": "taskId",
+						"required": true,
+						"schema": {
+							"description": "Parent task ID.",
+							"type": "string"
+						}
+					},
+					{
+						"description": "Trigger ID.",
+						"in": "path",
+						"name": "triggerId",
+						"required": true,
+						"schema": {
+							"description": "Trigger ID.",
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Trigger"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Get a trigger by ID",
+				"tags": ["Triggers"]
+			},
+			"patch": {
+				"operationId": "update-trigger",
+				"parameters": [
+					{
+						"description": "Parent task ID.",
+						"in": "path",
+						"name": "taskId",
+						"required": true,
+						"schema": {
+							"description": "Parent task ID.",
+							"type": "string"
+						}
+					},
+					{
+						"description": "Trigger ID.",
+						"in": "path",
+						"name": "triggerId",
+						"required": true,
+						"schema": {
+							"description": "Trigger ID.",
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateTriggerInputBody"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Trigger"
+								}
+							}
+						},
+						"description": "OK"
+					},
+					"default": {
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								}
+							}
+						},
+						"description": "Error"
+					}
+				},
+				"summary": "Partially update a trigger",
+				"tags": ["Triggers"]
+			}
+		}
+	}
+}

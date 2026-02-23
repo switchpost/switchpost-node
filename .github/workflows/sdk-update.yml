@@ -1,0 +1,64 @@
+name: SDK Update
+
+on:
+  repository_dispatch:
+    types: [openapi-updated]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Fetch latest OpenAPI spec
+        run: |
+          gh api repos/switchpost/switchpost-openapi/contents/openapi.json \
+            --jq '.content' | base64 -d > openapi.json
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check for changes
+        id: diff
+        run: |
+          if git diff --quiet openapi.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Update SDK
+        if: steps.diff.outputs.changed == 'true'
+        uses: anthropics/claude-code-action@beta
+        with:
+          model: claude-opus-4-6
+          prompt: "/update-sdk The openapi.json has been updated. Diff the new spec against the current SDK and update all types, resources, tests, and README."
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Create PR
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          BRANCH="sdk-update/$(date +%Y%m%d-%H%M%S)"
+          git checkout -b "$BRANCH"
+          git add -A
+          git commit -m "feat: update SDK to match latest OpenAPI spec"
+          git push origin "$BRANCH"
+          gh pr create \
+            --title "feat: update SDK to match latest OpenAPI spec" \
+            --body "Automated SDK update triggered by OpenAPI spec change." \
+            --base main \
+            --head "$BRANCH"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

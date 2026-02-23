@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: switchpost
+      POSTGRES_PASSWORD: switchpost
+      POSTGRES_DB: switchpost
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U switchpost"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  switchpost:
+    image: ${SWITCHPOST_IMAGE:-ghcr.io/switchpost/switchpost:latest}
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    environment:
+      SWITCHPOST_POSTGRES__DSN: postgres://switchpost:switchpost@postgres:5432/switchpost?sslmode=disable
+      SWITCHPOST_REDIS__URL: redis://redis:6379
+      SWITCHPOST_SERVICE__HTTP_PORT: "8080"
+      SWITCHPOST_SERVICE__METRICS_PORT: "9090"
+      SWITCHPOST_AUTH__ADMIN_KEY: "${E2E_ADMIN_KEY_HASH}"
+    command: ["serve", "--service", "all", "--migrate"]
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:9090/healthz || exit 1"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+      start_period: 10s

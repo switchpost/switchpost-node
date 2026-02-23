@@ -1,0 +1,53 @@
+{
+	"name": "switchpost",
+	"version": "0.0.0",
+	"description": "Official TypeScript/Node.js client for the SwitchPost API",
+	"license": "Apache-2.0",
+	"type": "module",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			},
+			"require": {
+				"types": "./dist/index.d.cts",
+				"default": "./dist/index.cjs"
+			}
+		}
+	},
+	"files": ["dist"],
+	"engines": {
+		"node": ">=18"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/switchpost/switchpost-node.git"
+	},
+	"homepage": "https://github.com/switchpost/switchpost-node",
+	"bugs": {
+		"url": "https://github.com/switchpost/switchpost-node/issues"
+	},
+	"keywords": ["switchpost", "task-scheduling", "api-client", "sdk"],
+	"scripts": {
+		"build": "tsup",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:e2e": "TS_NODE_PROJECT=tsconfig.e2e.json cucumber-js",
+		"lint": "biome check .",
+		"format": "biome format --write .",
+		"typecheck": "tsc --noEmit"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.0",
+		"@cucumber/cucumber": "^11.0.0",
+		"@types/node": "^22.0.0",
+		"ts-node": "^10.9.2",
+		"tsup": "^8.0.0",
+		"typescript": "^5.7.0",
+		"vitest": "^3.0.0"
+	}
+}
