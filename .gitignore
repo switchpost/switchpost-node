@@ -30,5 +30,5 @@ npm-debug.log*
 yarn.lock
 pnpm-lock.yaml
 
-# Gherkin feature files (fetched from switchpost-openapi)
+# Gherkin feature files (fetched from switchpost-spec)
 features/

@@ -25,7 +25,7 @@ jobs:
 
       - name: Fetch latest OpenAPI spec
         run: |
-          gh api repos/switchpost/switchpost-openapi/contents/openapi.json \
+          gh api repos/switchpost/switchpost-spec/contents/openapi.json \
             --jq '.content' | base64 -d > openapi.json
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

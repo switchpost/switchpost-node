@@ -1,6 +1,6 @@
 module.exports = {
 	default: {
-		paths: ["../switchpost-openapi/features/**/*.feature"],
+		paths: ["../switchpost-spec/features/**/*.feature"],
 		require: ["e2e/step-definitions/**/*.ts", "e2e/support/**/*.ts"],
 		requireModule: ["ts-node/register"],
 		format: ["progress-bar", "html:reports/cucumber-report.html"],
