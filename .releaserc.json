@@ -12,13 +12,13 @@
 		[
 			"@semantic-release/exec",
 			{
-				"prepareCmd": "sed -i '' 's/SDK_VERSION = \".*\"/SDK_VERSION = \"${nextRelease.version}\"/' src/version.ts"
+				"prepareCmd": "npm version ${nextRelease.version} --no-git-tag-version --allow-same-version && node -e \"const fs=require('fs');fs.writeFileSync('src/version.ts',fs.readFileSync('src/version.ts','utf8').replace(/SDK_VERSION = \\\".*\\\"/, 'SDK_VERSION = \\\"${nextRelease.version}\\\"'))\""
 			}
 		],
 		[
 			"@semantic-release/git",
 			{
-				"assets": ["package.json", "src/version.ts"],
+				"assets": ["package.json", "package-lock.json", "src/version.ts"],
 				"message": "chore(release): ${nextRelease.version} [skip ci]"
 			}
 		],
